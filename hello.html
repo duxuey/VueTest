@@ -1,0 +1,477 @@
+
+<!-- 开发环境版本，包含了有帮助的命令行警告  -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<!-- 生产环境版本，优化了尺寸和速度 
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+<!-- 因为 AJAX 库和通用工具的生态已经相当丰富，Vue 核心代码没有重复 -->
+<!-- 提供这些功能以保持精简。这也可以让你自由选择自己更熟悉的工具。 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="hello.css" />
+
+<div id="app">
+    显示信息：{{message}}
+</div>
+</br>
+<div id="app_1">
+    <span v-bind:title="message">
+          鼠标悬浮上来呀!
+    </span>
+</div>
+<div id="app_2">
+    <p v-if="show">当前秒数是2的倍数我才显示</p>
+</div>
+<div id="app_3">
+    <ol>
+        <li v-for="todo in todoList">
+            语言列表:
+            {{todo.content}}
+        </li>
+    </ol>
+</div>
+<div id="app_4">
+    <span>{{character}}</span>&nbsp;&nbsp;<button v-on:click="reverseBtn()">逆转字符串</button>
+</div>
+</br>
+<div id="app_5">
+    <span>please input something: {{inputMessage}}</span><input v-model="inputMessage"/>
+    </br>
+    </br>
+    <span v-once>{{once}}</span>
+</div>
+</br>
+<div id="app_6">
+    <input v-model="a" />
+    <button v-on:click="changeVal">change it</button>
+</div>
+
+<div id="app_computed">
+     <p>Original message : {{message}}</p>
+     <p>reversed message : {{reversedMessage}}</p>
+</div>
+
+<div id="app_question">
+    <p>
+        Ask a yes/no question:
+        <input v-model="question"/>
+    </p>
+    <p>{{answer}}</p>
+</div>
+
+<div id="app_class" class="static">
+    <p>This div's class is static</p>
+    <div v-bind:class="{active: isActive, 'text-danger':hasError}">
+        <!-- isActive 为true 则使用active class;反之则不用 -->
+        <p>This div's class is active</p>
+    </div>
+    <div v-bind:class="classObject">
+        <p>computed class for this div</p>
+    </div>
+    <div v-bind:class="[isActive?arrayClass1:'', arrayClass2, arrayClass3]">
+        <!-- 可以使用三元表达式 -->
+        <p>This is a div that has an Array class</p>
+    </div>
+</div>
+
+<div id="app_style">
+    <!-- v-bind:style 内多个样式逗号分隔,而不是分号 -->
+    <p v-bind:style="{color: styleColor, fontSize: fontSize +'px;'}">use style example</p>
+    <p v-bind:style="styleObject">直接绑定到样式对象</p>
+    <p v-bind:style="[styleObj1, styleObj2]">可以将多个样式应用到同一个元素上</p>
+</div>
+
+<div id="app_if">
+    <p v-if="Math.random() > 0.5">Now you see p1!</p>
+    <p v-else>Now you see p2!</p>
+    <div>
+        <p v-if="type === 'A'">A</p>
+        <p v-else-if="type === 'B'">B</p>
+        <p v-else-if="type === 'C'">C</p>
+        <p v-else>Not A/B/C</p>
+    </div>
+</div>
+<div id="app_key">
+    <template v-if="loginType === 'username'">
+        <label>Username:</label><!-- label 没有添加key,仍然是高复用的-->
+        <input placeholder="enter your name" key="username"/><!-- 添加key属性,则不复用input,每次点击button会清空上一次的输入-->
+    </template>
+    <template v-else>
+        <label>Email:</label>
+        <input placeholder="Enter your email address" key="email"/>
+    </template>
+    <button v-on:click="toggleType">Toggle Type</button>
+</div>
+<div id="app_show">
+    <!-- v-show 和 v-if 类同.区别: v-show会始终被渲染在Dom中(同css的display).
+       v-show不支持template和 v-else,初始渲染开销较高
+       v-if是惰性的,只有是真时才渲染,切换开销更高
+       如果需要频繁切换使用v-show较好;如果允许时条件很少改变则使用v-if较好
+    -->
+    <h1 v-show="No">Hello, this is h1 title!</h1>
+    <h2 v-show="Yes">Hello, this is h2 title!</h2>
+</div>
+<div id="app_for">
+<!-- just a remainder: v-for优先级比v-if 高-->
+<!-- 也可以使用 item of items--> <!-- 建议尽可能在使用 v-for 时提供 key -->
+     <ul>
+         <li v-for="(item, index) in items">{{parentText}}-{{index}}-{{item.text}}</li>
+     </ul>
+     <ul>
+         <li v-for="(val,key,index) in obj">{{objectIterator}}-{{index}}-{{key}}-{{val}}</li>
+     </ul>
+</div>
+
+<div id="app_array">
+    <ul>
+        <li v-for="(item, index) in arrayList">{{index}}--{{item.content}}</li>
+    </ul>
+    <span>输入字符添加到列表</span>
+    <input v-model="newContent"/>&nbsp;<button v-on:click="addContent">添加</button>
+    <button v-on:click="popContent">删除最后一个元素</button>
+    <button v-on:click="shiftContent">删除第一个元素</button>
+    <p></p>
+    <input v-model="unshiftItem"/>&nbsp;<button v-on:click="unshiftBtn">开头添加一个元素</button>
+    <input v-model="spliceNum" />&nbsp;<button v-on:click="spliceBtn">输入参数,指定删除几个元素</button>
+    <button v-on:click="sortBtn">排序</button>
+    <button v-on:click="reverseBtn">reverse</button>
+</div>
+
+<div id="app_array_reactive">
+    <p>Vue不能检测数组变动的情况：</p>
+    <ul>
+        <li v-for="(item, index) in arrList">{{index}} -- {{item.content}}</li>
+    </ul>
+    <input v-model="fixedVal"/>&nbsp;<button v-on:click="changeItem1">输入新的值,页面数组列表无变化</button>
+    <input v-model="changedVal"/>&nbsp;<button v-on:click="changeItem2">输入新的值,页面数组列表有变化</button>
+    <input v-model="spliceVal"/>&nbsp;<button v-on:click="spliceTest">splice有变化测试</button>
+</div>
+
+<div id="app_confirm_dialog" class="showDialog">
+    <button id="show-modal" @click="show=true">Show Dialog</button>
+    <!-- use the modal component, pass in the prop -->
+    <div class="modal-mask modal-transition" v-show="show">
+        <div class="modal-wrapper">
+        <div class="modal-container">
+            <div class="modal-header">
+            <h3 slot="header">custom header</h3>
+            </div>
+            <div class="modal-body">
+                default body
+            </div>
+            <div class="modal-footer">
+                default footer
+                <button class="modal-default-button" @click="show = false">
+                OK
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- <div id="qwe">
+        <button class="modal-default-button"  @click="show = false">  OK</button> -->
+        <!-- use the modal component, pass in the prop -->
+        <!-- <modal :show.sync="showModal"> </modal> -->
+    <!-- </div> -->
+</div>
+ 
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            message:"Hello Vue!"
+        }
+    });
+    var app_1 = new Vue({
+        el:"#app_1",
+        data:{
+            message:"页面加载于"+new Date().toLocaleString()
+        }
+    });
+    var app_2 = new Vue({
+        el:"#app_2",
+        data:{
+            show:new Date().getSeconds() % 2 == 0?true:false
+        }
+    });
+    var app_3 = new Vue({
+        el:"#app_3",
+        data:{
+            todoList:[
+                {id:"0", content:"JavaScript"},
+                {id:"1", content:"Java"},
+                {id:"2", content:"vue"},
+                {id:"3", content:"Angular"}
+            ]
+        }
+    });
+    var app_4 = new Vue({
+        el:"#app_4",
+        data:{
+            character:"2019新年快乐"
+        },
+        methods:{
+            reverseBtn:function(){
+                this.character = this.character.split("").reverse().join('');
+            }
+        }
+    });
+    var app_5 = new Vue({
+        el:"#app_5",
+        data:{
+            inputMessage:"",
+            once:"I am a constant,open console type app_5.once=any variable,i will not change."
+        }
+    });
+
+    var data = {a:1};
+    //Object.freeze(data); //阻止修改现有属性
+    var app_6 = new Vue({
+        //ViewModel 
+        el:"#app_6",
+        data: data,
+        methods:{
+            changeVal: function(){
+                data.a = Math.random();
+            }
+        }
+    });
+
+    var app_computed = new Vue({
+        el:"#app_computed",
+        data:{
+            message:"Hello Vue!"
+        },
+        computed:{
+            reversedMessage : function(){
+                return this.message.split("").reverse().join('');
+            }
+        }
+    });
+
+    var app_question = new Vue({
+        el:"#app_question",
+        data:{
+            question:"",
+            answer:"I cannot give you an answer until you ask a question!"
+        },
+        watch:{
+            question: function(newQuestion, oldQuestion){
+                this.answer = "Waiting for you to stop typing...",
+                this.debouncedFetAnswer()
+            }
+        },
+        created:function(){
+            this.debouncedFetAnswer = _.debounce(this.getAnswer, 500);
+        },
+        methods:{
+            getAnswer : function(){
+                if (this.question.indexOf("?") === -1){
+                    this.answer = "Question usually contain a question mask.:-)"
+                    return
+                }
+                this.answer = "Thinking..."
+                var vm = this
+                axios.get('https://yesno.wtf/api')
+                   .then(function(response){
+                       vm.answer = _.capitalize(response.data.answer)
+                   })
+                   .catch(function(error){
+                       vm.answer = 'Error! Could not reach the API. '+error
+                   })
+            }
+        }
+    });
+
+    var app_class= new Vue({
+        el:"#app_class",
+        data:{
+            isActive: true,
+            hasError: false,
+            error: null,
+            arrayClass1: 'arrayClass1',
+            arrayClass2: 'arrayClass2',
+            arrayClass3: 'arrayClass3'
+        },
+        computed:{
+            classObject: function(){
+                return {
+                    active : this.isActive && !this.error,
+                    'text-danger': this.error &&this.error.type === 'fatal'
+                }
+            }
+        }
+    });
+
+    var app_style = new Vue({
+        el: "#app_style",
+        data:{
+            styleColor: "red",
+            fontSize: 12,
+            styleObject: {
+                color: 'blue',
+                fontSize: '14px'
+            },
+            styleObj1: {
+                color: 'yellow',
+                fontSize: '16px'
+            },
+            styleObj2: {
+                color: 'green',
+                fontSize: '18px'
+            }
+        }
+    });
+    var app_if = new Vue({
+       el:"#app_if",
+       data:{
+          type: '' //change to A B or C for test
+       } 
+    });
+    var app_key = new Vue({
+        el:"#app_key",
+        data:{
+            loginType: "username"
+        },
+        methods:{
+            toggleType: function(){
+                this.loginType == "username" ? this.loginType = "email" : this.loginType="username";
+            }
+        }
+    });
+    var app_show = new Vue({
+        el:"#app_show",
+        data: {
+            Yes: Math.random() >= 0.5,
+            No: Math.random() < 0.5
+        }
+    });
+    var app_for = new Vue({
+        el:"#app_for",
+        data:{
+            parentText:'循环列表',
+            items:[
+                {id:'0', text:'我是第一个'},
+                {id:'1', text:'我是第二个'},
+                {id:'2', text:'我是第三个'},
+                {id:'3', text:'我是第四个'},
+                {id:'3', text:'我是第五个'}
+            ],
+            objectIterator:'循环对象',
+            obj: {
+                firstName: 'John',
+                lastName: 'Doe',
+                age: '19'
+            }
+        }
+    });
+    var app_array = new Vue({
+        el:"#app_array",
+        data:{
+            arrayList:[
+                {id: "00", content: "push"},
+                {id: "01", content: "pop"},
+                {id: "02", content: "shift"},
+                {id: "03", content: "unshift"},
+                {id: "04", content: "splice"},
+                {id: "05", content: "sort"},
+                {id: "06", content: "reverse"}
+            ],
+            newContent: "",
+            unshiftItem:"",
+            spliceNum:""
+        },
+        methods:{
+            addContent: function(){
+                this.arrayList.push({content:this.newContent});
+                this.newContent = "";
+            },
+            popContent: function(){
+                //数组从结尾删除一个元素
+                this.arrayList.pop();
+                console.log(this.arrayList.length);
+            },
+            shiftContent: function(){
+                //数组从开头删除一个元素
+                this.arrayList.shift();
+                console.log(this.arrayList.length);
+            },
+            unshiftBtn: function(){
+                //数组开头添加一个元素
+                this.arrayList.unshift({content:this.unshiftItem});
+                console.log(this.arrayList.length);
+            },
+            spliceBtn: function(){
+                this.arrayList.splice(0, this.spliceNum);
+                this.spliceNum = "";
+                console.log(this.arrayList.length);
+            },
+            sortBtn: function(){
+                return this.arrayList.sort(function (a, b) {
+                    var val1 = a.content;
+                    var val2 = b.content;
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return -1;   // should be 1. -1 is just for this test scenario:make sure each time click sort button,there are some changes on the page.
+                    } else {
+                        return 0;
+                    }
+                });
+            },
+            reverseBtn: function(){
+                return this.arrayList.reverse();
+            }
+        }
+    });
+    var app_array_reactive = new Vue({
+        el: "#app_array_reactive",
+        data: {
+            arrList: [
+                {id:'0', content: 'a'},
+                {id:'1', content: 'b'},
+                {id:'2', content: 'c'},
+            ],
+            fixedVal: "",
+            changedVal: "",
+            spliceVal: ""
+        },
+        methods: {
+            changeItem1: function(){
+                app_array_reactive.arrList[0] = {id: '0', content: this.fixedVal};
+            },
+            changeItem2: function(){
+                //this.fixedVal = "";
+                Vue.set(app_array_reactive.arrList, 0, {id: '0', content: this.changedVal});
+            },
+            spliceTest: function(){
+                app_array_reactive.arrList.splice(0, 1, {id:'0', content: this.spliceVal});
+                //vm.items.splice(indexOfItem, spliceNum, newValue)
+                //vm.items.splice(newLength)
+            }
+        }
+    });
+
+    var app_confirm_dialog = new Vue({
+        el: "#app_confirm_dialog",
+        props: {
+            show: {
+            type: Boolean,
+            required: true,
+            twoWay: true
+            }
+        },
+        data () {
+            return {
+
+            }
+        },
+        methods: {
+            closeMyself () {
+                this.$emit('on-close')
+            }
+        }
+    });
+</script>

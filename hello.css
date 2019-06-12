@@ -1,0 +1,34 @@
+.showDialog{
+    margin-top: 2%;
+}
+.modal-mask{
+    background-color: rgba(0, 0, 0, .5);
+    position: fixed;
+    width: 100%;
+    height:100%;
+    top:0;
+    left: 0;
+    z-index: 99;
+    display: table;
+}
+.modal-wrapper{
+    display: table-cell;
+    vertical-align: middle;
+}
+.modal-container{
+    margin: auto;
+    top: 50%;
+    background-color: white;
+    width: 300px;
+    padding: 20px 30px;
+}
+.modal-header h3{
+    margin-top: 0;
+    color:#42b983;
+}
+.modal-body{
+    margin: 20px 0;
+}
+.modal-default-button{
+    float: right;
+}
